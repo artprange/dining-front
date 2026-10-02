@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { isDemo, resetDatabase } from '@/mocks'
+import { demoFailed, isDemo, resetDatabase } from '@/mocks'
 
 /**
  * Deixa explícito que os dados são de demonstração. Sem isso o visitante não
@@ -10,7 +10,26 @@ import { isDemo, resetDatabase } from '@/mocks'
 export function DemoBanner() {
   const [dismissed, setDismissed] = useState(false)
 
-  if (!isDemo || dismissed) return null
+  if (!isDemo) return null
+
+  /**
+   * Sem o worker nada é interceptado, e as telas mostram "a API esta
+   * rodando?" — pergunta sem sentido numa demonstração, que não tem API.
+   * Este aviso não fecha: é a explicação do que o visitante está vendo.
+   */
+  if (demoFailed) {
+    return (
+      <div className="bg-red-100 px-4 py-2 text-xs text-red-900">
+        <p className="mx-auto w-full max-w-2xl">
+          <strong>Demonstração indisponível.</strong> Este navegador não
+          permitiu registrar o service worker que simula a API, então as listas
+          vão aparecer vazias.
+        </p>
+      </div>
+    )
+  }
+
+  if (dismissed) return null
 
   return (
     <div className="bg-amber-100 px-4 py-2 text-xs text-amber-900">
