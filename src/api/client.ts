@@ -1,4 +1,12 @@
-const baseUrl = (import.meta.env.VITE_API_URL ?? 'http://localhost:3000').replace(/\/$/, '')
+/**
+ * Exportado para os handlers do MSW montarem os mesmos caminhos que o cliente
+ * chama. Deixar os dois derivarem daqui evita o mock casar com uma URL e a
+ * aplicação pedir outra.
+ */
+export const baseUrl = (import.meta.env.VITE_API_URL ?? 'http://localhost:3000').replace(
+  /\/$/,
+  '',
+)
 
 /** Formato de erro do Nest: `message` vem como string ou lista (validação). */
 interface NestErrorBody {
